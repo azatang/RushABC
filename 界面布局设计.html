@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>打字通 - 界面布局设计</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        /* 标签页导航 */
+        .tabs {
+            display: flex;
+            background: #f5f5f5;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            background: #f5f5f5;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-button:hover {
+            background: #e8e8e8;
+        }
+
+        .tab-button.active {
+            background: white;
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* ============ 主界面布局 ============ */
+        .home-screen {
+            padding: 60px 40px;
+            text-align: center;
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .logo {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .tagline {
+            font-size: 18px;
+            margin-bottom: 50px;
+            opacity: 0.9;
+        }
+
+        .mode-buttons {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .mode-btn {
+            width: 200px;
+            padding: 30px 20px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .mode-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .mode-icon {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .difficulty-section {
+            margin-top: 40px;
+        }
+
+        .difficulty-label {
+            font-size: 18px;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        .difficulty-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .difficulty-btn {
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            border: 2px solid white;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .difficulty-btn:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        /* ============ 游戏界面布局 ============ */
+        .game-screen {
+            padding: 30px;
+            min-height: 800px;
+            display: flex;
+            flex-direction: column;
+            background: #f9f9f9;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 0 20px;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 20px;
+        }
+
+        .game-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .mode-badge {
+            display: inline-block;
+            padding: 8px 15px;
+            background: #667eea;
+            color: white;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* 统计信息面板 */
+        .stats-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 0 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+            font-family: 'Courier New', monospace;
+        }
+
+        .stat-value.accuracy {
+            color: #27ae60;
+        }
+
+        .stat-value.time {
+            color: #e74c3c;
+        }
+
+        .stat-value.wpm {
+            color: #f39c12;
+        }
+
+        /* 词汇显示区 */
+        .vocabulary-display {
+            background: white;
+            border-radius: 8px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 250px;
+        }
+
+        .vocabulary-container {
+            font-size: 48px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            line-height: 1.8;
+            text-align: center;
+        }
+
+        .character {
+            display: inline-block;
+            padding: 10px 8px;
+            margin: 0 2px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .character.current {
+            background: #27ae60;
+            color: white;
+            box-shadow: 0 0 15px rgba(39, 174, 96, 0.5);
+            transform: scale(1.1);
+        }
+
+        .character.correct {
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .character.error {
+            background: #e74c3c;
+            color: white;
+            box-shadow: 0 0 10px rgba(231, 76, 60, 0.3);
+        }
+
+        .character.pending {
+            color: #bbb;
+        }
+
+        /* 进度条 */
+        .progress-section {
+            padding: 0 20px;
+            margin-bottom: 20px;
+        }
+
+        .progress-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 45%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        /* 输入框和按钮 */
+        .game-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            padding: 0 20px;
+        }
+
+        .hidden-input {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .control-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-restart {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-restart:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-menu {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-menu:hover {
+            background: #7f8c8d;
+            transform: translateY(-2px);
+        }
+
+        /* ============ 结果界面布局 ============ */
+        .result-screen {
+            padding: 60px 40px;
+            text-align: center;
+            min-height: 800px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .result-title {
+            font-size: 42px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .result-item {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 30px 20px;
+            border-radius: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .result-item-label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 12px;
+        }
+
+        .result-item-value {
+            font-size: 42px;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+
+        .result-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .result-btn {
+            padding: 15px 40px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+
+        .btn-again {
+            background: white;
+            color: #667eea;
+        }
+
+        .btn-again:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-home {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-home:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: translateY(-3px);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .mode-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .mode-btn {
+                width: 100%;
+            }
+
+            .stats-panel {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .vocabulary-display {
+                padding: 20px;
+                min-height: 180px;
+            }
+
+            .vocabulary-container {
+                font-size: 32px;
+                letter-spacing: 2px;
+            }
+
+            .character {
+                padding: 8px 6px;
+            }
+
+            .result-grid {
+                grid-template-columns: 1fr;
+                max-width: 100%;
+            }
+        }
+
+        /* 说明文字 */
+        .note {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f0f0f0;
+            border-left: 4px solid #667eea;
+            border-radius: 4px;
+            text-align: left;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .note h4 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .note ul {
+            margin-left: 20px;
+        }
+
+        .note li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 标签页导航 -->
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab(0)">1️⃣ 主界面</button>
+            <button class="tab-button" onclick="switchTab(1)">2️⃣ 游戏界面</button>
+            <button class="tab-button" onclick="switchTab(2)">3️⃣ 结果界面</button>
+        </div>
+
+        <!-- ============ 1. 主界面 ============ -->
+        <div class="content active">
+            <div class="home-screen">
+                <div class="logo">🎯 打字通</div>
+                <div class="tagline">儿童打字练习系统</div>
+
+                <div class="mode-buttons">
+                    <div class="mode-btn">
+                        <div class="mode-icon">🇨🇳</div>
+                        <div>中文拼音</div>
+                    </div>
+                    <div class="mode-btn">
+                        <div class="mode-icon">🇬🇧</div>
+                        <div>英文单词</div>
+                    </div>
+                </div>
+
+                <div class="difficulty-section">
+                    <div class="difficulty-label">选择难度</div>
+                    <div class="difficulty-buttons">
+                        <button class="difficulty-btn">⭐ 简单</button>
+                        <button class="difficulty-btn">⭐⭐ 中等</button>
+                        <button class="difficulty-btn">⭐⭐⭐ 困难</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="note">
+                <h4>💡 界面说明：</h4>
+                <ul>
+                    <li><strong>中文拼音模式：</strong>练习打字输入中文词汇的拼音</li>
+                    <li><strong>英文单词模式：</strong>练习打字输入英文单词</li>
+                    <li><strong>难度选择：</strong>不同难度对应不同年级的词汇库</li>
+                    <li><strong>界面设计参考：</strong>金山打字通的简洁美观风格</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============ 2. 游戏界面 ============ -->
+        <div class="content">
+            <div class="game-screen">
+                <div class="game-header">
+                    <div>
+                        <div class="game-title">打字练习</div>
+                    </div>
+                    <div class="mode-badge">中文拼音 - 中等难度</div>
+                </div>
+
+                <!-- 统计信息面板 -->
+                <div class="stats-panel">
+                    <div class="stat-card">
+                        <div class="stat-label">⏱ 剩余时间</div>
+                        <div class="stat-value time">04:32</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">✓ 准确率</div>
+                        <div class="stat-value accuracy">96.5%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">⚡ 速度</div>
+                        <div class="stat-value wpm">78 字/分</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">📝 进度</div>
+                        <div class="stat-value">23/50</div>
+                    </div>
+                </div>
+
+                <!-- 进度条 -->
+                <div class="progress-section">
+                    <div class="progress-label">词汇进度: 23 / 50</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 46%;"></div>
+                    </div>
+                </div>
+
+                <!-- 词汇显示区 -->
+                <div class="vocabulary-display">
+                    <div class="vocabulary-container">
+                        <span class="character correct">z</span><span class="character correct">h</span><span class="character correct">o</span><span class="character correct">n</span><span class="character current">g</span><span class="character pending">g</span><span class="character pending">u</span><span class="character pending">o</span>
+                        <br>
+                        <span style="color: #999; font-size: 24px;">中国 (zhongguo)</span>
+                    </div>
+                </div>
+
+                <!-- 控制按钮 -->
+                <div class="game-controls">
+                    <button class="control-btn btn-restart">🔄 重新开始</button>
+                    <button class="control-btn btn-menu">🏠 返回菜单</button>
+                </div>
+
+                <input type="text" class="hidden-input" placeholder="输入框（隐藏）">
+            </div>
+
+            <div class="note">
+                <h4>💡 游戏界面说明：</h4>
+                <ul>
+                    <li><strong>统计面板：</strong>实时显示时间、准确率、输入速度和进度</li>
+                    <li><strong>词汇显示：</strong>
+                        <span class="character correct">绿色</span> = 已正确输入
+                        <span class="character current">深绿高亮</span> = 当前字符
+                        <span class="character error">红色</span> = 输入错误
+                        <span class="character pending">灰色</span> = 待输入
+                    </li>
+                    <li><strong>进度条：</strong>显示当前进度的可视化</li>
+                    <li><strong>输入方式：</strong>键盘输入自动检测（输入框隐藏）</li>
+                    <li><strong>自动切换：</strong>完成一个词汇/单词后自动加载下一个</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============ 3. 结果界面 ============ -->
+        <div class="content">
+            <div class="result-screen">
+                <div class="result-title">🎉 挑战完成！</div>
+
+                <div class="result-grid">
+                    <div class="result-item">
+                        <div class="result-item-label">总准确率</div>
+                        <div class="result-item-value">96.8%</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-item-label">输入速度</div>
+                        <div class="result-item-value">85<span style="font-size: 24px;">字/分</span></div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-item-label">完成字数</div>
+                        <div class="result-item-value">423</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-item-label">错误字数</div>
+                        <div class="result-item-value">14</div>
+                    </div>
+                </div>
+
+                <div class="result-buttons">
+                    <button class="result-btn btn-again">🔄 再次挑战</button>
+                    <button class="result-btn btn-home">🏠 返回首页</button>
+                </div>
+            </div>
+
+            <div class="note">
+                <h4>💡 结果界面说明：</h4>
+                <ul>
+                    <li><strong>成绩展示：</strong>清晰显示本次挑战的完整数据统计</li>
+                    <li><strong>数据内容：</strong>
+                        <ul>
+                            <li>总准确率 - 整场准确率百分比</li>
+                            <li>输入速度 - 字/分钟或 WPM</li>
+                            <li>完成字数 - 总共输入的正确字符数</li>
+                            <li>错误字数 - 总共输入的错误字符数</li>
+                        </ul>
+                    </li>
+                    <li><strong>操作选项：</strong>支持再次挑战或返回首页选择其他模式</li>
+                    <li><strong>可选功能：</strong>成绩自动保存，支持查看历史成绩排行</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(index) {
+            // 隐藏所有内容
+            document.querySelectorAll('.content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // 移除所有按钮的活跃状态
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // 显示选中的内容
+            document.querySelectorAll('.content')[index].classList.add('active');
+            document.querySelectorAll('.tab-button')[index].classList.add('active');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎯 RushABC - 儿童打字练习</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app">
+        <!-- 受击屏幕红边特效 -->
+        <div id="screen-flash" class="screen-flash"></div>
+
+        <!-- ============ 1. 主界面 ============ -->
+        <section id="screen-home" class="screen screen-home active">
+            <div class="logo">🎯 RushABC</div>
+            <div class="tagline">儿童打字练习系统</div>
+
+            <div class="mode-buttons">
+                <button class="mode-btn" data-mode="chinese">
+                    <div class="mode-icon">🇨🇳</div>
+                    <div>中文拼音</div>
+                    <div class="mode-desc">练习中小学词语拼音</div>
+                </button>
+                <button class="mode-btn" data-mode="english">
+                    <div class="mode-icon">🔤</div>
+                    <div>英文单词</div>
+                    <div class="mode-desc">练习中小学英语单词</div>
+                </button>
+            </div>
+
+            <div class="difficulty-section">
+                <div class="difficulty-label">选择难度</div>
+                <div class="difficulty-buttons">
+                    <button class="difficulty-btn" data-difficulty="easy">⭐ 简单（小学低年级）</button>
+                    <button class="difficulty-btn" data-difficulty="medium">⭐⭐ 中等（小学高年级/初中）</button>
+                    <button class="difficulty-btn" data-difficulty="hard">⭐⭐⭐ 困难（初中/高中）</button>
+                </div>
+            </div>
+
+            <div class="difficulty-section">
+                <div class="difficulty-label">选择玩法</div>
+                <div class="difficulty-buttons">
+                    <button class="play-btn selected" data-play="practice">📝 练习模式</button>
+                    <button class="play-btn" data-play="battle">⚔️ 闯关打怪</button>
+                </div>
+            </div>
+
+            <button id="btn-start" class="start-btn" disabled>开始练习 ▶</button>
+
+            <div class="home-tip">提示：选择模式、难度和玩法后，点击"开始练习"。练习模式专注打字；闯关打怪一边打字一边消灭怪物！每局时长 5 分钟。</div>
+
+            <div class="powered-by">Powered by <a href="https://github.com/azatang" target="_blank" rel="noopener">aza.tang</a></div>
+        </section>
+
+        <!-- ============ 2. 游戏界面 ============ -->
+        <section id="screen-game" class="screen screen-game">
+            <div class="game-header">
+                <div class="game-title">打字练习</div>
+                <div id="mode-badge" class="mode-badge">中文拼音 - 中等难度</div>
+            </div>
+
+            <!-- 统计信息面板 -->
+            <div class="stats-panel">
+                <div class="stat-card">
+                    <div class="stat-label">⏱ 剩余时间</div>
+                    <div id="stat-time" class="stat-value time">05:00</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">✓ 准确率</div>
+                    <div id="stat-accuracy" class="stat-value accuracy">100%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">⚡ 速度</div>
+                    <div id="stat-speed" class="stat-value wpm">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">📝 进度</div>
+                    <div id="stat-progress" class="stat-value">0/0</div>
+                </div>
+            </div>
+
+            <!-- 战斗场景（仅闯关打怪模式显示） -->
+            <div id="battle-scene" class="battle-scene">
+                <div class="btl-ground"></div>
+
+                <div class="btl-hp-row">
+                    <div class="btl-hp-block">
+                        <div class="btl-hp-name player">
+                            <span>🧙 打字法师</span>
+                            <span id="btl-player-hp-nums">100 / 100</span>
+                        </div>
+                        <div class="btl-hp-bar">
+                            <div id="btl-player-hp-fill" class="btl-hp-fill player" style="width:100%"></div>
+                        </div>
+                    </div>
+
+                    <div class="btl-vs">⚔️</div>
+
+                    <div class="btl-hp-block">
+                        <div class="btl-hp-name monster">
+                            <span id="btl-mon-hp-nums">30 / 30</span>
+                            <span id="btl-mon-name">🟢 史莱姆</span>
+                        </div>
+                        <div class="btl-hp-bar">
+                            <div id="btl-mon-hp-fill" class="btl-hp-fill monster" style="width:100%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btl-arena" id="btl-arena">
+                    <div class="btl-figure player" id="btl-player-figure">🧙</div>
+                    <div class="btl-track" id="btl-track"></div>
+                    <div class="btl-figure monster" id="btl-mon-figure">🟢</div>
+                </div>
+
+                <div class="btl-info">
+                    <span>🏆 分数 <strong id="btl-score">0</strong></span>
+                    <span>🔥 连击 <strong id="btl-combo">x1</strong></span>
+                    <span>💀 击败 <strong id="btl-kills">0</strong> 只</span>
+                </div>
+            </div>
+
+            <!-- 进度条 -->
+            <div class="progress-section">
+                <div id="progress-label" class="progress-label">词汇进度: 0 / 0</div>
+                <div class="progress-bar">
+                    <div id="progress-fill" class="progress-fill" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <!-- 词汇显示区 -->
+            <div class="vocabulary-display">
+                <div class="vocabulary-container">
+                    <div id="word-hint" class="word-hint">中国</div>
+                    <div id="char-row" class="char-row"></div>
+                </div>
+            </div>
+
+            <!-- 虚拟键盘（指位提示） -->
+            <div class="keyboard-wrapper">
+                <div id="keyboard" class="keyboard"></div>
+                <div class="hands-hint">
+                    <span class="finger-chip chip-pinky">粉：小指</span>
+                    <span class="finger-chip chip-ring">蓝：无名指</span>
+                    <span class="finger-chip chip-middle">绿：中指</span>
+                    <span class="finger-chip chip-index">黄：食指</span>
+                    <span class="finger-chip chip-thumb">灰：拇指</span>
+                </div>
+            </div>
+
+            <!-- 控制按钮 -->
+            <div class="game-controls">
+                <button id="btn-restart" class="control-btn btn-restart">🔄 重新开始</button>
+                <button id="btn-menu" class="control-btn btn-menu">🏠 返回菜单</button>
+            </div>
+
+            <input type="text" id="hidden-input" class="hidden-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        </section>
+
+        <!-- ============ 3. 结果界面 ============ -->
+        <section id="screen-result" class="screen screen-result">
+            <div class="result-title">🎉 挑战完成！</div>
+
+            <div class="result-grid">
+                <div class="result-item">
+                    <div class="result-item-label">总准确率</div>
+                    <div id="result-accuracy" class="result-item-value">0%</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-item-label">输入速度</div>
+                    <div id="result-speed" class="result-item-value">0</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-item-label">完成字符</div>
+                    <div id="result-correct" class="result-item-value">0</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-item-label">错误字符</div>
+                    <div id="result-wrong" class="result-item-value">0</div>
+                </div>
+                <div id="result-kills-item" class="result-item result-battle-only">
+                    <div class="result-item-label">击败怪物</div>
+                    <div id="result-kills" class="result-item-value">0</div>
+                </div>
+                <div id="result-combo-item" class="result-item result-battle-only">
+                    <div class="result-item-label">最高连击</div>
+                    <div id="result-combo" class="result-item-value">0</div>
+                </div>
+            </div>
+
+            <div id="result-praise" class="result-praise"></div>
+
+            <div class="result-buttons">
+                <button id="btn-again" class="result-btn btn-again">🔄 再次挑战</button>
+                <button id="btn-home" class="result-btn btn-home">🏠 返回首页</button>
+            </div>
+        </section>
+    </div>
+
+    <!-- 词汇库 -->
+    <script src="js/vocabularies/chinese.js"></script>
+    <script src="js/vocabularies/english.js"></script>
+    <!-- 核心模块 -->
+    <script src="js/Timer.js"></script>
+    <script src="js/Statistics.js"></script>
+    <script src="js/Keyboard.js"></script>
+    <script src="js/Battle.js"></script>
+    <script src="js/InputHandler.js"></script>
+    <script src="js/Game.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
